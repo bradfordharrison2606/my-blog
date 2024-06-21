@@ -18,6 +18,7 @@
     <footer>
         <p>My Blog &copy; 2023</p>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -25,15 +26,23 @@
             
             if (post) {
                 fetch(`posts/${post}`)
-                    .then(response => response.text())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
                     .then(data => {
                         document.getElementById('post-content').innerHTML = marked(data);
+                    })
+                    .catch(error => {
+                        console.error('There has been a problem with your fetch operation:', error);
+                        document.getElementById('post-content').innerHTML = '<p>Failed to load the post.</p>';
                     });
             } else {
                 document.getElementById('post-content').innerHTML = '<p>No post specified.</p>';
             }
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
 </html>
