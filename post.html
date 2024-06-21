@@ -21,6 +21,9 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            console.log('DOMContentLoaded event fired');
+            console.log('Checking if marked is defined:', typeof marked);
+
             const urlParams = new URLSearchParams(window.location.search);
             const post = urlParams.get('post');
             
@@ -33,7 +36,13 @@
                         return response.text();
                     })
                     .then(data => {
-                        document.getElementById('post-content').innerHTML = marked(data);
+                        console.log('Fetched post content:', data);
+                        if (typeof marked !== 'undefined') {
+                            document.getElementById('post-content').innerHTML = marked(data);
+                        } else {
+                            console.error('Marked is not defined');
+                            document.getElementById('post-content').innerHTML = '<p>Failed to load the post due to missing library.</p>';
+                        }
                     })
                     .catch(error => {
                         console.error('There has been a problem with your fetch operation:', error);
