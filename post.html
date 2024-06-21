@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog Post</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>My Blog</h1>
+        </div>
+    </header>
+    <div class="container" id="post-content">
+        <!-- Post content will be dynamically loaded here -->
+    </div>
+    <footer>
+        <p>My Blog &copy; 2023</p>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const post = urlParams.get('post');
+            
+            if (post) {
+                fetch(`posts/${post}`)
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('post-content').innerHTML = marked(data);
+                    });
+            } else {
+                document.getElementById('post-content').innerHTML = '<p>No post specified.</p>';
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</body>
+</html>
